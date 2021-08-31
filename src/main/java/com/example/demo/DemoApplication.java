@@ -36,6 +36,7 @@ public class DemoApplication {
 					LocalDateTime.now()
 			);
 
+
 			repository.insert(student);
 		};
 	}
