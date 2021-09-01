@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,10 +19,15 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
+//    @PostMapping
+//    public void addStudent(@RequestBody Student student){
+//        studentService.addStudent(student);
+//    }
 
     @PostMapping
-    public void addStudent(@RequestBody Student student){
+    public ResponseEntity<Student> addStudent(@RequestBody Student student){
         studentService.addStudent(student);
+        return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
 
 }
