@@ -49,6 +49,7 @@ public class DemoApplication {
 					});
 
 		};
+
 	}
 
 	private void usingMongoTemplateAndQuery(StudentRepository repository, MongoTemplate mongoTemplate, String email, Student student) {

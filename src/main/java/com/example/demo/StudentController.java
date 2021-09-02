@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.exception.StudentAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +26,15 @@ public class StudentController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student){
-        studentService.addStudent(student);
+    public ResponseEntity<Object> addStudent(@RequestBody Student student){
+        try{
+            studentService.addStudent(student);
+        }catch(StudentAlreadyExistsException studentAlreadyExistsException){
+            return new ResponseEntity<>(studentAlreadyExistsException.getMessage(), HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(student, HttpStatus.CREATED);
+
+
     }
 
 }
