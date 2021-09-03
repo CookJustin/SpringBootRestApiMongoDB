@@ -1,15 +1,14 @@
 package com.example.exception;
 
 import com.example.demo.Student;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class StudentAlreadyExistsException extends RuntimeException{
-    private String message;
+
+@ResponseStatus(code = HttpStatus.CONFLICT, reason = "Student already exists")
+public class StudentAlreadyExistsException extends Exception{
     public StudentAlreadyExistsException(String message){
         super(message);
-        this.message = message;
     }
-    public StudentAlreadyExistsException(String message, Throwable cause){
-        super(message,cause);
 
-    }
 }

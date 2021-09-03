@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.exception.FailedToAddStudentException;
 import com.example.exception.StudentAlreadyExistsException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,12 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addStudent(Student student){
+    public void addStudent(Student student) throws StudentAlreadyExistsException {
         boolean studentExists = false;
         List<Student> studentList = studentRepository.findAll();
         for(Student stu : studentList){
             if(stu.getId().equals(student.getId())){
+                System.out.println("Stu = " + stu.getId().toString() + "Student" + student.getId().toString());
                 studentExists = true;
 
             }
@@ -28,7 +30,12 @@ public class StudentService {
                 throw new StudentAlreadyExistsException("Student with ID already exists");
             }
         }
-        studentRepository.save(student);
+        try{
+            studentRepository.save(student);
+        }catch(Exception e){
+            throw e;
+        }
+
 
     }
 }
