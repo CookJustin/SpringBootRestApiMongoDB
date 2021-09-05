@@ -3,6 +3,7 @@ package com.example.demo;
 
 import com.example.exception.StudentAlreadyExistsException;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,28 +19,21 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public List<Student> fetchAllStudents(){
-        return studentService.getAllStudents();
+    public ResponseEntity<List<Student>> fetchAllStudents() {
+        List<Student> allStudents = studentService.getAllStudents();
+        return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
-//    @PostMapping
-//    public void addStudent(@RequestBody Student student){
-//        studentService.addStudent(student);
-//    }
+    @GetMapping("api/v1/students/{id}")
+    public ResponseEntity<Student> getStudentById(@PathVariable("id") String id){
+        Student student = studentService.getStudentById(id);
+        return new ResponseEntity<>(student, HttpStatus.OK);
+    }
 
     @PostMapping
-    public ResponseEntity<Object> addStudent(@RequestBody Student student){
-
-        try{
-            studentService.addStudent(student);
-        }catch(StudentAlreadyExistsException studentAlreadyExistsException){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not add Student", studentAlreadyExistsException);
-        }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not add Student", e);
-        }
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
-
-
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        Student savedStudent = studentService.addStudent(student);
+        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
     }
 
 }

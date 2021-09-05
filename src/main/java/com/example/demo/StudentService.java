@@ -1,9 +1,9 @@
 package com.example.demo;
 
-import com.example.exception.FailedToAddStudentException;
-import com.example.exception.StudentAlreadyExistsException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,25 +17,16 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addStudent(Student student) throws StudentAlreadyExistsException {
-        boolean studentExists = false;
-        List<Student> studentList = studentRepository.findAll();
-        for(Student stu : studentList){
-            if(stu.getId().equals(student.getId())){
-                System.out.println("Stu = " + stu.getId().toString() + "Student" + student.getId().toString());
-                studentExists = true;
+    public Student getStudentById(String id) {
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student with id " + id + " does not exist"));
+    }
 
-            }
-            if(studentExists){
-                throw new StudentAlreadyExistsException("Student with ID already exists");
-            }
+    public Student addStudent(Student student) throws IllegalArgumentException {
+        try {
+            return studentRepository.save(student);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Student Given", e);
         }
-        try{
-            studentRepository.save(student);
-        }catch(Exception e){
-            throw e;
-        }
-
-
     }
 }
