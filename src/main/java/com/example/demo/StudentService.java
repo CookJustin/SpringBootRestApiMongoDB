@@ -43,4 +43,15 @@ public class StudentService {
             updatedStudent.setTotalSpentInBooks(student.getTotalSpentInBooks());
         return updatedStudent;
     }
+
+    public Student deleteStudent(String id) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student with id " + id + " does not exist"));
+        try{
+            studentRepository.delete(student);
+        }catch(IllegalArgumentException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student with id " + id + " does not exist", e);
+        }
+        return student;
+    }
 }
