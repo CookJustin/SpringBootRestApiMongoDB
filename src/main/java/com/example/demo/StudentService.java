@@ -2,6 +2,7 @@ package com.example.demo;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -28,5 +29,18 @@ public class StudentService {
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid Student Given", e);
         }
+    }
+
+    public Student updateStudent(String id, Student student) {
+            Student updatedStudent = studentRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student with id " + id + " does not exist"));
+            updatedStudent.setEmail(student.getEmail());
+            updatedStudent.setAddress(student.getAddress());
+            updatedStudent.setFirstName(student.getFirstName());
+            updatedStudent.setLastName(student.getLastName());
+            updatedStudent.setGender(student.getGender());
+            updatedStudent.setFavouriteSubjects(student.getFavouriteSubjects());
+            updatedStudent.setTotalSpentInBooks(student.getTotalSpentInBooks());
+        return updatedStudent;
     }
 }
